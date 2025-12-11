@@ -33,13 +33,30 @@ export function MySpotterEmbed() {
       });
   };
 
-  // Listen to DataModelInstructions embed event
+  const handlePreviewSpotterData = () => {
+    embedRef?.current
+      ?.trigger(HostEvent.PreviewSpotterData)
+      .then((res) => {
+        console.info("HostEvent PreviewSpotterData Response:", res);
+      })
+      .catch((err) => {
+        console.error("HostEvent PreviewSpotterData Error:", err);
+      });
+  };
+
+  // Listen to Spotter embed events
   useEffect(() => {
     if (embedRef.current) {
       embedRef.current.on(EmbedEvent.DataModelInstructions, (payload) => {
         console.log("=== EmbedEvent.DataModelInstructions ===");
         console.log("Payload:", payload);
         console.log("========================================");
+      });
+
+      embedRef.current.on(EmbedEvent.PreviewSpotterData, (payload) => {
+        console.log("=== EmbedEvent.PreviewSpotterData ===");
+        console.log("Payload:", payload);
+        console.log("=====================================");
       });
     }
   }, [embedRef]);
@@ -102,6 +119,14 @@ export function MySpotterEmbed() {
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
         >
           Data Model Instructions
+        </button>
+        <button
+          style={buttonStyle}
+          onClick={handlePreviewSpotterData}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3b5bdb")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
+        >
+          Preview Spotter Data
         </button>
       </div>
       <div className="MyLiveboardOne">
