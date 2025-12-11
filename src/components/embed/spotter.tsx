@@ -110,6 +110,8 @@ export function MySpotterEmbed() {
           worksheetId={worksheetId}
           additionalFlags={{
             overrideConsoleLogs: false,
+            updatedSpotterChatPrompt: true,
+            enableSpotterWorksheetTablePreview: true,
           }}
           customizations={lightThemeStyles}
           enablePastConversationsSidebar={true}
