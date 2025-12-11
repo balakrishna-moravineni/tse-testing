@@ -11,7 +11,9 @@ let cachedToken = "";
 
 const expiryTime = 5 * 1000;
 const getNewToken = async () => {
-  const config = createBasic;
+  const config = createConfiguration({
+    baseServer: new ServerConfiguration("https://something.thoughtspot.com", {}),
+  });
   const tsRestApiClient = new ThoughtSpotRestApi(config);
 
   const data = await tsRestApiClient.getFullAccessToken({
