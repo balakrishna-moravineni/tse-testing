@@ -1,11 +1,11 @@
 import { SageEmbed, useEmbedRef } from "@thoughtspot/visual-embed-sdk/react";
 import { useAppConfig } from "../../contexts/appConfig";
 import { useGlobalModal } from "../GlobalModal";
+import { commonStyles } from "./embedUtils";
 import {
   getPinboardEmbedApiCustomButton,
   getAnswerEmbedApiCustomButton,
-  commonStyles,
-} from "./embedUtils";
+} from "./hostEventBar";
 import { HostEventBar } from "./hostEventBar";
 
 export function MySageEmbed() {

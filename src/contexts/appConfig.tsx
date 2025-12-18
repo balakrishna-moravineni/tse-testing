@@ -15,6 +15,7 @@ export type AppConfig = {
   password: string;
   logLevel: LogLevel;
   liveboardIdOne: string;
+  worksheetId: string;
   authType: (typeof implementedAuthTypes)[number];
   setTsHost: (username: string) => void;
   setUsername: (username: string) => void;
@@ -44,6 +45,7 @@ const defaultConfig: AppConfig = {
   username: "",
   password: "",
   liveboardIdOne: "9bd202f5-d431-44bf-9a07-b4f7be372125",
+  worksheetId: "",
   logLevel: LogLevel.ERROR,
   authType: AuthType.None,
   setTsHost: () => {},
@@ -94,6 +96,9 @@ export const AppConfigProvider = (props: any) => {
   const [liveboardIdOne, setLiveboardIdOne] = useState(
     initialCachedItem().liveboardIdOne || "9bd202f5-d431-44bf-9a07-b4f7be372125"
   );
+  const [worksheetId, setWorksheetId] = useState(
+    initialCachedItem().worksheetId || ""
+  );
   const [hostEventParams, setHostEventsParams] = useState<any>(
     initialCachedItem().hostEventParams || {
       addVizToPinboard: {
@@ -121,6 +126,7 @@ export const AppConfigProvider = (props: any) => {
       logLevel,
       authType,
       liveboardIdOne,
+      worksheetId,
       hostEventParams,
       backendHost,
       hostEventsConfig,
@@ -133,6 +139,7 @@ export const AppConfigProvider = (props: any) => {
     logLevel,
     authType,
     liveboardIdOne,
+    worksheetId,
     hostEventParams,
     backendHost,
     hostEventsConfig,
@@ -146,6 +153,7 @@ export const AppConfigProvider = (props: any) => {
     config.authType && setAuthType(config.authType);
     config.logLevel && setLogLevel(config.logLevel);
     config.liveboardIdOne && setLiveboardIdOne(config.liveboardIdOne);
+    config.worksheetId && setWorksheetId(config.worksheetId);
     config.embedConfig && setEmbedConfig(config.embedConfig);
     setHostEventsParams(config.hostEventParams);
     setBackendHost(config.backendHost);
@@ -168,6 +176,7 @@ export const AppConfigProvider = (props: any) => {
         setFullConfig,
         isDefaultsLoaded,
         liveboardIdOne,
+        worksheetId,
         hostEventParams,
         setBackendHost,
         backendHost,

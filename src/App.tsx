@@ -15,6 +15,7 @@ import { MyLiveboardOne } from "./components/embed/liveboard";
 import { MySearchBarEmbed } from "./components/embed/searchBar";
 import { MySageEmbed } from "./components/embed/sage";
 import { MyAppEmbed } from "./components/embed/fullApp";
+import { MySpotterEmbed } from "./components/embed/spotter";
 import { AppConfigProvider } from "./contexts/appConfig";
 
 function Navbar() {
@@ -25,6 +26,7 @@ function Navbar() {
       <Link to="/searchEmbed">Search Embed</Link>
       <Link to="/sageEmbed">Sage Embed</Link>
       <Link to="/appEmbed">App Embed</Link>
+      <Link to="/spotterEmbed">Spotter Embed</Link>
     </nav>
   );
 }
@@ -41,6 +43,7 @@ function AppRouter() {
           <Route path="searchEmbed" element={<MySearchBarEmbed />} />
           <Route path="sageEmbed" element={<MySageEmbed />} />
           <Route path="appEmbed" element={<MyAppEmbed />} />
+          <Route path="spotterEmbed" element={<MySpotterEmbed />} />
         </Routes>
       </BrowserRouter>
     </div>

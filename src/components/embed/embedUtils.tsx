@@ -86,3 +86,24 @@ export const commonStyles: CustomisationsInterface = {
     },
   },
 };
+
+export const lightThemeStyles: CustomisationsInterface = {
+  style: {
+    customCSS: {
+      variables: {
+        "--ts-var-root-background": "#ffffff",
+
+        "--ts-var-nav-background": "#f8f9fa",
+        "--ts-var-nav-color": "#333333",
+
+        "--ts-var-button--secondary-background": "#f1f3f5",
+        "--ts-var-button--secondary-color": "#333333",
+        "--ts-var-button--secondary--hover-background": "#e9ecef",
+
+        "--ts-var-button--primary-background": "#4263eb",
+        "--ts-var-button--primary-color": "#ffffff",
+        "--ts-var-button--primary--hover-background": "#3b5bdb",
+      },
+    },
+  },
+};

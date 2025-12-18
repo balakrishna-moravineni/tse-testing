@@ -3,7 +3,6 @@ import {
   HostEvent,
   MessagePayload,
   UIPassthroughEvent,
-  UiPassthroughEvent,
 } from "@thoughtspot/visual-embed-sdk/react";
 // import { TsEmbed } from "@thoughtspot/visual-embed-sdk";
 import { useEffect, useRef, useState } from "react";
@@ -226,8 +225,8 @@ export const getCommonHostEventButtons = (
     {
       name: "getAnswerPageConfig",
       callback: async () => {
-        const data = await embedRef.current.triggerUiPassThrough(
-          UiPassthroughEvent.getAnswerPageConfig,
+        const data = await embedRef.current.triggerUIPassThrough(
+          UIPassthroughEvent.GetAnswerConfig,
           {}
         );
         showModalContent(JSON.stringify(data, null, 2));
@@ -237,8 +236,8 @@ export const getCommonHostEventButtons = (
     {
       name: "getPinboardPageConfig",
       callback: async () => {
-        const data = await embedRef.current.triggerUiPassThrough(
-          UiPassthroughEvent.getPinboardPageConfig,
+        const data = await embedRef.current.triggerUIPassThrough(
+          UIPassthroughEvent.GetLiveboardConfig,
           {}
         );
         showModalContent(JSON.stringify(data, null, 2));
@@ -316,8 +315,8 @@ export const getAnswerEmbedApiCustomButton = (
           "Calling getAnswerPageConfig with",
           parameters.getAnswerPageConfig
         );
-        const res = await embedRef.current.triggerUiPassThrough(
-          UiPassthroughEvent.getAnswerPageConfig,
+        const res = await embedRef.current.triggerUIPassThrough(
+          UIPassthroughEvent.GetAnswerConfig,
           {}
         );
         console.log(res);

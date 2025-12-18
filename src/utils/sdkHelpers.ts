@@ -3,6 +3,9 @@ import {
   ThoughtSpotRestApi,
   createConfiguration,
   createBearerAuthenticationConfig,
+  BaseServerConfiguration,
+  RequestContext,
+  ResponseContext,
 } from "@thoughtspot/rest-api-sdk";
 import { AuthFailureType, LogLevel } from "@thoughtspot/visual-embed-sdk";
 import {
@@ -14,7 +17,7 @@ import {
 import { configs } from "../configs";
 import { toast } from "react-toastify";
 
-import { getEmbedConfig } from "@thoughtspot/visual-embed-sdk";
+import { getInitConfig } from "@thoughtspot/visual-embed-sdk";
 
 export const implementedAuthTypes = [
   AuthType.Basic,
@@ -45,11 +48,11 @@ const registerAuthEvent = ({
     });
     console.log("Auth fail", e);
   });
-  aEE.on(AuthStatus.SDK_SUCCESS, (d) => {
+  aEE.on(AuthStatus.SDK_SUCCESS, () => {
     initTiming.end = Date.now();
     initTiming.total = (initTiming.end - initTiming.start) / 1000;
     toast(`Init login success: ${initTiming.total}s`, { type: "success" });
-    console.log("Login SDK_SUCCESS", d);
+    console.log("Login SDK_SUCCESS");
   });
 };
 

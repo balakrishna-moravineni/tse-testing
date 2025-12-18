@@ -67,6 +67,11 @@ const getJsonSchema = (defaults: any): RJSFSchema => {
         default: defaults.logLevel,
         enum: Object.keys(LogLevel),
       },
+      worksheetId: {
+        type: "string",
+        title: "Worksheet ID (for Spotter)",
+        default: defaults.worksheetId,
+      },
     },
   };
 };
@@ -88,6 +93,9 @@ const getUiSchema = (): UiSchema => {
     },
     logLevel: {
       "ui:widget": "select",
+      "ui:classNames": "rjsfField",
+    },
+    worksheetId: {
       "ui:classNames": "rjsfField",
     },
   };
