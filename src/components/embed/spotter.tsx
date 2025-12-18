@@ -78,7 +78,7 @@ export function MySpotterEmbed() {
       type: disableDataModelInstructions ? "secondary" : "primary",
     },
     {
-      name: isNLInstructionsInSpotterEnabled ? "Disable NLInstructions" : "Enable NLInstructions",
+      name: isNLInstructionsInSpotterEnabled ? "Disable NLInstructions Feature" : "Enable NLInstructions Feature",
       callback: () => setIsNLInstructionsInSpotterEnabled(!isNLInstructionsInSpotterEnabled),
       type: isNLInstructionsInSpotterEnabled ? "primary" : "secondary",
     },
