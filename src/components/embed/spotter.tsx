@@ -1,4 +1,6 @@
 import { SpotterEmbed, useEmbedRef } from "@thoughtspot/visual-embed-sdk/react";
+import { Action } from "@thoughtspot/visual-embed-sdk";
+import { useState } from "react";
 import { useAppConfig } from "../../contexts/appConfig";
 import { useGlobalModal } from "../GlobalModal";
 import { lightThemeStyles } from "./embedUtils";
@@ -8,6 +10,12 @@ export function MySpotterEmbed() {
   const { showModalContent } = useGlobalModal();
   const { hostEventParams, setFullConfig, worksheetId } = useAppConfig();
   const embedRef = useEmbedRef<typeof SpotterEmbed>();
+  const [hideDataModelInstructions, setHideDataModelInstructions] = useState(false);
+  const [disableDataModelInstructions, setDisableDataModelInstructions] = useState(false);
+  const [disablePreviewDataSpotter, setDisablePreviewDataSpotter] = useState(false);
+  const [hidePreviewDataSpotter, setHidePreviewDataSpotter] = useState(false);
+  const [isNLInstructionsInSpotterEnabled, setIsNLInstructionsInSpotterEnabled] = useState(true);
+  const [updatedSpotterChatPrompt, setUpdatedSpotterChatPrompt] = useState(true);
 
   if (!worksheetId) {
     return (
@@ -48,18 +56,71 @@ export function MySpotterEmbed() {
     );
   }
 
+  const spotterToggleButtons = [
+    {
+      name: hidePreviewDataSpotter ? "Show PreviewData" : "Hide PreviewData",
+      callback: () => setHidePreviewDataSpotter(!hidePreviewDataSpotter),
+      type: hidePreviewDataSpotter ? "secondary" : "primary",
+    },
+    {
+      name: disablePreviewDataSpotter ? "Enable PreviewData" : "Disable PreviewData",
+      callback: () => setDisablePreviewDataSpotter(!disablePreviewDataSpotter),
+      type: disablePreviewDataSpotter ? "secondary" : "primary",
+    },
+    {
+      name: hideDataModelInstructions ? "Show DataModelInstructions" : "Hide DataModelInstructions",
+      callback: () => setHideDataModelInstructions(!hideDataModelInstructions),
+      type: hideDataModelInstructions ? "secondary" : "primary",
+    },
+    {
+      name: disableDataModelInstructions ? "Enable DataModelInstructions" : "Disable DataModelInstructions",
+      callback: () => setDisableDataModelInstructions(!disableDataModelInstructions),
+      type: disableDataModelInstructions ? "secondary" : "primary",
+    },
+    {
+      name: isNLInstructionsInSpotterEnabled ? "Disable NLInstructions" : "Enable NLInstructions",
+      callback: () => setIsNLInstructionsInSpotterEnabled(!isNLInstructionsInSpotterEnabled),
+      type: isNLInstructionsInSpotterEnabled ? "primary" : "secondary",
+    },
+    {
+      name: updatedSpotterChatPrompt ? "Old ChatPrompt" : "New ChatPrompt",
+      callback: () => setUpdatedSpotterChatPrompt(!updatedSpotterChatPrompt),
+      type: updatedSpotterChatPrompt ? "primary" : "secondary",
+    },
+  ];
+
+  const hiddenActions = [];
+  if (hideDataModelInstructions) {
+    hiddenActions.push(Action.DataModelInstructions);
+  }
+  if (hidePreviewDataSpotter) {
+    hiddenActions.push(Action.PreviewDataSpotter);
+  }
+  const disabledActions = [];
+  if (disableDataModelInstructions) {
+    disabledActions.push(Action.DataModelInstructions);
+  }
+  if (disablePreviewDataSpotter) {
+    disabledActions.push(Action.PreviewDataSpotter);
+  }
+
   return (
     <>
-      <HostEventBar embedRef={embedRef} />
+      <HostEventBar embedRef={embedRef} customButtons={spotterToggleButtons} />
       <div className="MyLiveboardOne">
         <SpotterEmbed
           ref={embedRef}
           worksheetId={worksheetId}
           additionalFlags={{
             overrideConsoleLogs: false,
+            updatedSpotterChatPrompt: updatedSpotterChatPrompt,
+            isNLInstructionsInSpotterEnabled: isNLInstructionsInSpotterEnabled,
           }}
           customizations={lightThemeStyles}
           enablePastConversationsSidebar={true}
+          hiddenActions={hiddenActions}
+          disabledActions={disabledActions}
+          disabledActionReason="This action has been disabled in the embed config"
         />
       </div>
     </>
