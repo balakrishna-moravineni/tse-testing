@@ -101,13 +101,14 @@ const createEmbedApiCallback = (
   defaultParams: any,
   setFullConfig: any,
   showModalContent: any,
-  embedRef: ReturnType<typeof useEmbedRef>
+  embedRef: ReturnType<typeof useEmbedRef>,
+  closeModal?: () => void
 ) => {
   return {
     name: embedApiName,
     color: schema ? "primary" : "secondary",
     callback: async () => {
-      const [params, error] = await getParamFromModal(schema, showModalContent);
+      const [params, error] = await getParamFromModal(schema, showModalContent, closeModal);
       if (error) return;
 
       setFullConfig({
@@ -151,7 +152,7 @@ const createHostEventCallback = ({
   type?: "primary" | "secondary";
 }) => {
   const { setFullConfig, hostEventParams } = useAppConfig();
-  const { showModalContent } = useGlobalModal();
+  const { showModalContent, closeModal } = useGlobalModal();
 
   return {
     name: buttonName || hostEvent,
@@ -161,7 +162,8 @@ const createHostEventCallback = ({
       if (schema) {
         const [params, error] = await getParamFromModal(
           schema,
-          showModalContent
+          showModalContent,
+          closeModal
         );
         if (error) return;
         setFullConfig({
@@ -262,7 +264,8 @@ export const getAnswerEmbedApiCustomButton = (
   embedRef: ReturnType<typeof useEmbedRef>,
   showModalContent: (content: string | React.FC) => void,
   parameters: any = {},
-  setFullConfig?: any
+  setFullConfig?: any,
+  closeModal?: () => void
 ) => {
   const AddVizToPinboard = "addVizToPinboard";
   const SaveAnswer = "saveAnswer";
@@ -273,7 +276,8 @@ export const getAnswerEmbedApiCustomButton = (
       parameters,
       setFullConfig,
       showModalContent,
-      embedRef
+      embedRef,
+      closeModal
     ),
     createEmbedApiCallback(
       SaveAnswer,
@@ -306,7 +310,8 @@ export const getAnswerEmbedApiCustomButton = (
       parameters,
       setFullConfig,
       showModalContent,
-      embedRef
+      embedRef,
+      closeModal
     ),
     {
       name: "getAnswerPageConfig",
@@ -329,7 +334,8 @@ export const getAnswerEmbedApiCustomButton = (
         const schema = getDefaultPinSchema(parameters);
         const [params, error] = await getParamFromModal(
           schema,
-          showModalContent
+          showModalContent,
+          closeModal
         );
         if (error) return;
 

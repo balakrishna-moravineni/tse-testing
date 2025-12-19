@@ -1,9 +1,32 @@
-import { SpotterEmbed, useEmbedRef, HostEvent, EmbedEvent } from "@thoughtspot/visual-embed-sdk/react";
+import {
+  SpotterEmbed,
+  useEmbedRef,
+  EmbedEvent,
+  HostEvent,
+} from "@thoughtspot/visual-embed-sdk/react";
 import { useEffect } from "react";
+import { RJSFSchema } from "@rjsf/utils";
 import { useAppConfig } from "../../contexts/appConfig";
 import { useGlobalModal } from "../GlobalModal";
-import { lightThemeStyles } from "./embedUtils";
+import { lightThemeStyles, getParamFromModal } from "./embedUtils";
 import { HostEventBar } from "./hostEventBar";
+
+// Schema for AddToCoaching host event
+const getAddToCoachingSchema = (parameters: Record<string, any> = {}): RJSFSchema => {
+  const AddToCoaching = "addToCoaching";
+  return {
+    title: "AddToCoaching Params",
+    type: "object" as const,
+    required: ["vizId"],
+    properties: {
+      vizId: {
+        type: "string" as const,
+        title: "Viz ID",
+        default: parameters[AddToCoaching]?.vizId || "",
+      },
+    },
+  };
+};
 
 const buttonStyle: React.CSSProperties = {
   padding: "10px 20px",
@@ -18,9 +41,25 @@ const buttonStyle: React.CSSProperties = {
 };
 
 export function MySpotterEmbed() {
-  const { showModalContent } = useGlobalModal();
+  const { showModalContent, closeModal } = useGlobalModal();
   const { hostEventParams, setFullConfig, worksheetId } = useAppConfig();
   const embedRef = useEmbedRef<typeof SpotterEmbed>();
+
+  const handleAddToCoachingWithVizId = async () => {
+    const schema = getAddToCoachingSchema(hostEventParams);
+    const [params, error] = await getParamFromModal(schema, showModalContent, closeModal);
+    if (error) return;
+
+    setFullConfig({
+      hostEventParams: {
+        ...hostEventParams,
+        addToCoaching: params,
+      },
+    });
+
+    console.log("[HostEvent.AddToCoaching] Triggering with:", params);
+    await embedRef?.current?.trigger(HostEvent.AddToCoaching, params);
+  };
 
   const handleDataModelInstructions = () => {
     embedRef?.current
@@ -44,6 +83,17 @@ export function MySpotterEmbed() {
       });
   };
 
+  const handleAddToCoaching = () => {
+    embedRef?.current
+      ?.trigger(HostEvent.AddToCoaching)
+      .then((res) => {
+        console.info("HostEvent AddToCoaching Response:", res);
+      })
+      .catch((err) => {
+        console.error("HostEvent AddToCoaching Error:", err);
+      });
+  };
+
   // Listen to Spotter embed events
   useEffect(() => {
     if (embedRef.current) {
@@ -55,6 +105,12 @@ export function MySpotterEmbed() {
 
       embedRef.current.on(EmbedEvent.PreviewSpotterData, (payload) => {
         console.log("=== EmbedEvent.PreviewSpotterData ===");
+        console.log("Payload:", payload);
+        console.log("=====================================");
+      });
+
+      embedRef.current.on(EmbedEvent.AddToCoaching, (payload) => {
+        console.log("=== EmbedEvent.AddToCoaching ===");
         console.log("Payload:", payload);
         console.log("=====================================");
       });
@@ -127,6 +183,22 @@ export function MySpotterEmbed() {
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
         >
           Preview Spotter Data
+        </button>
+        <button
+          style={buttonStyle}
+          onClick={handleAddToCoaching}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3b5bdb")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
+        >
+          Add To Coaching
+        </button>
+        <button
+          style={buttonStyle}
+          onClick={handleAddToCoachingWithVizId}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3b5bdb")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
+        >
+          AddToCoaching with vizId
         </button>
       </div>
       <div className="MyLiveboardOne">

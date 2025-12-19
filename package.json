@@ -9,7 +9,7 @@
     "@rjsf/utils": "5.21.1",
     "@rjsf/validator-ajv8": "5.21.1",
     "@thoughtspot/rest-api-sdk": "latest",
-    "@thoughtspot/visual-embed-sdk": "https://pkg.pr.new/thoughtspot/visual-embed-sdk/@thoughtspot/visual-embed-sdk@f018cc7265f61513c86b3c6db8733eda078ec014",
+    "@thoughtspot/visual-embed-sdk": "https://pkg.pr.new/thoughtspot/visual-embed-sdk/@thoughtspot/visual-embed-sdk@b970fb813cc2f205ac8293e6dbe404701b7991df",
     "@types/react-resizable": "3.0.8",
     "loader-utils": "3.2.1",
     "re-resizable": "6.10.0",

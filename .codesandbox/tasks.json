@@ -3,7 +3,7 @@
   "setupTasks": [
     {
       "name": "Installing Dependencies",
-      "command": "pnpm install"
+      "command": "npm install --legacy-peer-deps"
     }
   ],
 
@@ -11,30 +11,30 @@
   "tasks": {
     "start": {
       "name": "start",
-      "command": "pnpm start",
-      "runAtStart": false,
-      "preview": {
-        "port": 3000
-      }
+      "command": "npm run start",
+      "runAtStart": false
     },
     "dev": {
       "name": "dev",
-      "command": "pnpm dev",
-      "runAtStart": true
+      "command": "npm run dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 3001
+      }
     },
     "build": {
       "name": "build",
-      "command": "pnpm build",
+      "command": "npm run build",
       "runAtStart": false
     },
     "test": {
       "name": "test",
-      "command": "pnpm test",
+      "command": "npm run test",
       "runAtStart": false
     },
     "eject": {
       "name": "eject",
-      "command": "pnpm eject",
+      "command": "npm run eject",
       "runAtStart": false
     }
   }
