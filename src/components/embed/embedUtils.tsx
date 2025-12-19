@@ -37,7 +37,8 @@ export const getHostEventCallback = (
 
 export const getParamFromModal = async (
   schema: RJSFSchema,
-  showModalContent: (content: string | React.FC, onClose: any) => void
+  showModalContent: (content: string | React.FC, onClose: any) => void,
+  closeModal?: () => void
 ) => {
   let promiseRef = {
     resolve: (data: any) => {},
@@ -52,6 +53,7 @@ export const getParamFromModal = async (
           validator={validator}
           onSubmit={(d) => {
             promiseRef.resolve([d.formData, null]);
+            closeModal?.();
           }}
         />
       );

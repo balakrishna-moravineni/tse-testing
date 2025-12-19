@@ -24,11 +24,6 @@ const getAddToCoachingSchema = (parameters: Record<string, any> = {}): RJSFSchem
         title: "Viz ID",
         default: parameters[AddToCoaching]?.vizId || "",
       },
-      answerId: {
-        type: "string" as const,
-        title: "Answer ID",
-        default: parameters[AddToCoaching]?.answerId || "",
-      },
     },
   };
 };
@@ -46,47 +41,24 @@ const buttonStyle: React.CSSProperties = {
 };
 
 export function MySpotterEmbed() {
-  const { showModalContent } = useGlobalModal();
+  const { showModalContent, closeModal } = useGlobalModal();
   const { hostEventParams, setFullConfig, worksheetId } = useAppConfig();
   const embedRef = useEmbedRef<typeof SpotterEmbed>();
 
-  // Listen for AddToCoaching embed event and log the payload
-  useEffect(() => {
-    const embedInstance = embedRef.current;
-    if (embedInstance?.on) {
-      embedInstance.on(EmbedEvent.AddToCoaching, (payload) => {
-        console.log("[EmbedEvent.AddToCoaching] Payload:", payload);
-      });
-    }
-  }, [embedRef]);
+  const handleAddToCoachingWithVizId = async () => {
+    const schema = getAddToCoachingSchema(hostEventParams);
+    const [params, error] = await getParamFromModal(schema, showModalContent, closeModal);
+    if (error) return;
 
-  // Custom button for triggering AddToCoaching host event
-  const addToCoachingButton = {
-    name: "AddToCoaching",
-    callback: async () => {
-      const schema = getAddToCoachingSchema(hostEventParams);
-      const [params, error] = await getParamFromModal(schema, showModalContent);
-      if (error) return;
+    setFullConfig({
+      hostEventParams: {
+        ...hostEventParams,
+        addToCoaching: params,
+      },
+    });
 
-      setFullConfig({
-        hostEventParams: {
-          ...hostEventParams,
-          addToCoaching: params,
-        },
-      });
-
-      console.log("[HostEvent.AddToCoaching] Triggering with:", params);
-      const res = await embedRef.current.trigger(HostEvent.AddToCoaching, params);
-
-      showModalContent(
-        JSON.stringify(
-          { event: "AddToCoaching Response", response: res },
-          null,
-          2
-        )
-      );
-    },
-    type: "primary",
+    console.log("[HostEvent.AddToCoaching] Triggering with:", params);
+    await embedRef?.current?.trigger(HostEvent.AddToCoaching, params);
   };
 
   const handleDataModelInstructions = () => {
@@ -111,6 +83,17 @@ export function MySpotterEmbed() {
       });
   };
 
+  const handleAddToCoaching = () => {
+    embedRef?.current
+      ?.trigger(HostEvent.AddToCoaching)
+      .then((res) => {
+        console.info("HostEvent AddToCoaching Response:", res);
+      })
+      .catch((err) => {
+        console.error("HostEvent AddToCoaching Error:", err);
+      });
+  };
+
   // Listen to Spotter embed events
   useEffect(() => {
     if (embedRef.current) {
@@ -122,6 +105,12 @@ export function MySpotterEmbed() {
 
       embedRef.current.on(EmbedEvent.PreviewSpotterData, (payload) => {
         console.log("=== EmbedEvent.PreviewSpotterData ===");
+        console.log("Payload:", payload);
+        console.log("=====================================");
+      });
+
+      embedRef.current.on(EmbedEvent.AddToCoaching, (payload) => {
+        console.log("=== EmbedEvent.AddToCoaching ===");
         console.log("Payload:", payload);
         console.log("=====================================");
       });
@@ -169,7 +158,7 @@ export function MySpotterEmbed() {
 
   return (
     <>
-      <HostEventBar embedRef={embedRef} customButtons={[addToCoachingButton]} />
+      <HostEventBar embedRef={embedRef} />
       <div style={{ 
         padding: "12px 16px", 
         backgroundColor: "#f8f9fa", 
@@ -194,6 +183,22 @@ export function MySpotterEmbed() {
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
         >
           Preview Spotter Data
+        </button>
+        <button
+          style={buttonStyle}
+          onClick={handleAddToCoaching}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3b5bdb")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
+        >
+          Add To Coaching
+        </button>
+        <button
+          style={buttonStyle}
+          onClick={handleAddToCoachingWithVizId}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3b5bdb")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#4263eb")}
+        >
+          AddToCoaching with vizId
         </button>
       </div>
       <div className="MyLiveboardOne">
